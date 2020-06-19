@@ -3,7 +3,8 @@ window.addEventListener('load', (event) => {
     const canvas = document.querySelector('canvas');
     const winsDiv = document.querySelector('#wins-div');
     const winsSpan = document.querySelector('#wins-span');
-    const restartSpan = document.querySelector('#restart-button');
+    const restartButton = document.querySelector('#restart-button');
+    const resetButton = document.querySelector('#reset-button');
     const ctx = canvas.getContext('2d');
 
     const circleWidth = 30;
@@ -14,8 +15,12 @@ window.addEventListener('load', (event) => {
         socket.emit('canvasClick', e.clientX);
     }
 
-    restartSpan.onclick = (e) => {
+    restartButton.onclick = (e) => {
         socket.emit('restartClick');
+    }
+
+    resetButton.onclick = (e) => {
+        socket.emit('resetClick');
     }
     
     socket.on('updateStore', function(STORE){

@@ -3,11 +3,13 @@ const circleXStart = 75;
 const circleWidth = 30;
 const circlePadding = 10;
 
-let STORE = {
+let STORE;
+const blankStore = {
     board: getBlankBoard(),
     currentGo: 'r',
     winScreen: false
 }
+resetStore();
 
 function newGame() {
     STORE = {
@@ -35,12 +37,17 @@ function onCanvasClick(cursorX) {
 }
 
 function onRestartClick() {
-    STORE = {
-        board: getBlankBoard(),
-        currentGo: 'r',
-        winScreen: false
-    } 
+    resetStore();
     return STORE;
+}
+
+function onResetClick() {
+    resetStore();
+    return STORE;
+}
+
+function resetStore() {
+    STORE = JSON.parse(JSON.stringify(blankStore));
 }
 
 function dropCircle(x) {
@@ -91,4 +98,4 @@ function win() {
 function getStore() {
     return STORE;
 }
-module.exports = { onCanvasClick, onRestartClick, newGame, getStore };
+module.exports = { onCanvasClick, onRestartClick, onResetClick, newGame, getStore };

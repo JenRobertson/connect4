@@ -31,6 +31,10 @@ io.on('connection', function(socket){ // somones connected
     updateStore(connect4.onRestartClick());
   });
 
+  socket.on('resetClick', function(){
+    updateStore(connect4.onResetClick());
+  });
+
   socket.on('newPlayer', function(segment){
     numberOfPlayers++;
     io.emit('newPlayer', numberOfPlayers);
