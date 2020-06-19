@@ -3,23 +3,32 @@ const circleXStart = 75;
 const circleWidth = 30;
 const circlePadding = 10;
 
+let numberOfPlayers = 0;
 let STORE;
 const blankStore = {
     board: getBlankBoard(),
+    hoverSegment: 2,
     currentGo: 'r',
-    winScreen: false
+    winScreen: false,
+    players: []
 }
 resetStore();
 
 function newGame() {
-    STORE = {
-        board: getBlankBoard(),
-        currentGo: 'r',
-        winScreen: false
-    } 
+    resetStore();
     return STORE;
 }
 
+function onNewPlayer(playerId){
+    STORE.players.push(playerId);
+    return STORE;
+}
+
+function onRemovePlayer(playerId){
+    const index = STORE.players.indexOf(playerId);
+    if (index !== -1) STORE.players.splice(index, 1);
+    return STORE;
+}
 
 function getBlankBoard() {
     const numOfCirclesX = 6;
@@ -98,4 +107,4 @@ function win() {
 function getStore() {
     return STORE;
 }
-module.exports = { onCanvasClick, onRestartClick, onResetClick, newGame, getStore };
+module.exports = { onCanvasClick, onRestartClick, onResetClick, onNewPlayer, onRemovePlayer, newGame, getStore };

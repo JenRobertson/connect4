@@ -6,8 +6,6 @@ var port = process.env.PORT || 3000;
 
 const connect4 = require("./connect4");
 
-let numberOfPlayers = 0;
-
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -20,8 +18,9 @@ app.use(express.static('public'));
 
 updateStore(connect4.newGame());
 
-io.on('connection', function(socket){ // somones connected
-  updateStore(connect4.getStore());
+io.on('connection', function(socket){ // someones connected
+  io.emit('newPlayer', socket.id); // tell front end which id they are
+  updateStore(connect4.onNewPlayer(socket.id)); // add new id to the STORE
 
   socket.on('canvasClick', function(cursorX){
     updateStore(connect4.onCanvasClick(cursorX));
@@ -35,9 +34,8 @@ io.on('connection', function(socket){ // somones connected
     updateStore(connect4.onResetClick());
   });
 
-  socket.on('newPlayer', function(segment){
-    numberOfPlayers++;
-    io.emit('newPlayer', numberOfPlayers);
+  socket.on('disconnect', function () {
+    updateStore(connect4.onRemovePlayer(socket.id)); // remove disconneted id from STORE
   });
 });
 

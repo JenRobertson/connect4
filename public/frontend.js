@@ -5,11 +5,14 @@ window.addEventListener('load', (event) => {
     const winsSpan = document.querySelector('#wins-span');
     const restartButton = document.querySelector('#restart-button');
     const resetButton = document.querySelector('#reset-button');
+    const idsDiv = document.querySelector('#ids-div');
     const ctx = canvas.getContext('2d');
 
     const circleWidth = 30;
     const circlePadding = 10;
     const circleXStart = 75;
+
+    let id;
     
     canvas.onclick = (e) => {
         socket.emit('canvasClick', e.clientX);
@@ -23,8 +26,31 @@ window.addEventListener('load', (event) => {
         socket.emit('resetClick');
     }
     
+    socket.on('newPlayer', function(newId){
+        console.log('jen', newId)
+        if(!id) id=newId;
+    });
+
+    function fillIdsDiv(players) {
+        let html = '';
+        players.forEach(playerId => {
+            console.log(id);
+            if(playerId === id){
+                html+=`You: <span>${playerId}</span><br>`;
+            } else {
+                html+=`<span>${playerId}</span><br>`;
+            }
+        });
+        idsDiv.innerHTML = html;
+    }
+    
     socket.on('updateStore', function(STORE){
-        drawBoard(STORE.board);
+
+        fillIdsDiv(STORE.players);
+        
+        if (STORE.hoverSegment) {
+            drawHoverCircle(STORE.hoverSegment, STORE.currentGo)
+        }
         if (STORE.winScreen) {
             const colour = STORE.currentGo === 'r' ? 'Red' : 'Yellow';
             winsDiv.style.display = "block";
@@ -33,7 +59,15 @@ window.addEventListener('load', (event) => {
         } else {
             winsDiv.style.display = "none";
         }
+        drawBoard(STORE.board);
     });
+
+    function drawHoverCircle (segment, currentGo) {
+        const widthOfSegment = circleWidth * 2 + (circlePadding);
+        ctx.clearRect(0, 0, 1000, 1000);
+        // drawBoard(STORE.board);
+        drawCircle(30, (segment * widthOfSegment) + circleXStart, currentGo);
+    }
     
     function drawBoard(board) {
         ctx.fillStyle = 'black';
