@@ -19,8 +19,11 @@ app.use(express.static('public'));
 updateStore(connect4.newGame());
 
 io.on('connection', function(socket){ // someones connected
-  io.emit('newPlayer', socket.id); // tell front end which id they are
-  updateStore(connect4.onNewPlayer(socket.id)); // add new id to the STORE
+  io.emit('assignId', socket.id); // tell front end which id they are
+
+  socket.on('newPlayer', function(name){
+    updateStore(connect4.onNewPlayer(socket.id, name)); // add new id to the STORE
+  });
 
   socket.on('canvasClick', function(cursorX){
     updateStore(connect4.onCanvasClick(cursorX));

@@ -6,13 +6,18 @@ window.addEventListener('load', (event) => {
     const restartButton = document.querySelector('#restart-button');
     const resetButton = document.querySelector('#reset-button');
     const idsDiv = document.querySelector('#ids-div');
+
+    const onboardingDiv = document.querySelector('#onboarding-div');
+    const onboardingInput = document.querySelector('#onboarding-div__input');
+    const onboardingButton = document.querySelector('#onboarding-div__button');
+
     const ctx = canvas.getContext('2d');
 
     const circleWidth = 30;
     const circlePadding = 10;
     const circleXStart = 75;
 
-    let id;
+    let id, name;
     
     canvas.onclick = (e) => {
         socket.emit('canvasClick', e.clientX);
@@ -25,20 +30,26 @@ window.addEventListener('load', (event) => {
     resetButton.onclick = (e) => {
         socket.emit('resetClick');
     }
+
+    onboardingButton.onclick = () => {
+        name = onboardingInput.value;
+        socket.emit('newPlayer', name);
+        onboardingDiv.style.display = 'none';
+    }
     
-    socket.on('newPlayer', function(newId){
-        console.log('jen', newId)
+    socket.on('assignId', function(newId) {
+        console.log('newId',newId);
         if(!id) id=newId;
     });
 
     function fillIdsDiv(players) {
         let html = '';
-        players.forEach(playerId => {
+        players.forEach(player => {
             console.log(id);
-            if(playerId === id){
-                html+=`You: <span>${playerId}</span><br>`;
+            if(player.socketId === id){
+                html+=`You: <span>${player.name}</span><br>`;
             } else {
-                html+=`<span>${playerId}</span><br>`;
+                html+=`<span>${player.name}</span><br>`;
             }
         });
         idsDiv.innerHTML = html;

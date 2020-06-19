@@ -19,14 +19,18 @@ function newGame() {
     return STORE;
 }
 
-function onNewPlayer(playerId){
-    STORE.players.push(playerId);
+function onNewPlayer(socketId, name){
+    STORE.players.push({name, socketId});
     return STORE;
 }
 
-function onRemovePlayer(playerId){
-    const index = STORE.players.indexOf(playerId);
-    if (index !== -1) STORE.players.splice(index, 1);
+
+function onRemovePlayer(socketId){
+    STORE.players.forEach((player, index) => {
+        if (player.socketId === socketId) {
+           STORE.players.splice(index, 1);
+        }
+    });
     return STORE;
 }
 
