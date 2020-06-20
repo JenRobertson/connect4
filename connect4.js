@@ -20,10 +20,17 @@ function newGame() {
 }
 
 function onNewPlayer(socketId, name){
-    STORE.players.push({name, socketId});
+    let colour;
+    if (STORE.players.length === 0){
+        colour = 'r';
+    } else if (STORE.players.length === 1){
+        colour = 'y';
+    } else {
+        colour = 'audience';
+    }
+    STORE.players.push({name, socketId, colour});
     return STORE;
 }
-
 
 function onRemovePlayer(socketId){
     STORE.players.forEach((player, index) => {

@@ -21,6 +21,8 @@ updateStore(connect4.newGame());
 io.on('connection', function(socket){ // someones connected
   io.emit('assignId', socket.id); // tell front end which id they are
 
+  updateStore(connect4.getStore());
+
   socket.on('newPlayer', function(name){
     updateStore(connect4.onNewPlayer(socket.id, name)); // add new id to the STORE
   });

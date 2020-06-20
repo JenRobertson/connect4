@@ -6,6 +6,7 @@ window.addEventListener('load', (event) => {
     const restartButton = document.querySelector('#restart-button');
     const resetButton = document.querySelector('#reset-button');
     const idsDiv = document.querySelector('#ids-div');
+    const currentGoSpan = document.querySelector('#currentgo-span');
 
     const onboardingDiv = document.querySelector('#onboarding-div');
     const onboardingInput = document.querySelector('#onboarding-div__input');
@@ -17,10 +18,12 @@ window.addEventListener('load', (event) => {
     const circlePadding = 10;
     const circleXStart = 75;
 
-    let id, name;
+    let id, myPlayerDetails, currentGo;
     
     canvas.onclick = (e) => {
-        socket.emit('canvasClick', e.clientX);
+        if (myPlayerDetails && myPlayerDetails.colour === currentGo) {
+            socket.emit('canvasClick', e.clientX);
+        }
     }
 
     restartButton.onclick = (e) => {
@@ -32,31 +35,41 @@ window.addEventListener('load', (event) => {
     }
 
     onboardingButton.onclick = () => {
-        name = onboardingInput.value;
-        socket.emit('newPlayer', name);
+        socket.emit('newPlayer', onboardingInput.value);
         onboardingDiv.style.display = 'none';
     }
     
     socket.on('assignId', function(newId) {
-        console.log('newId',newId);
         if(!id) id=newId;
     });
 
+    const colourMap = {
+        r: 'red',
+        y: 'yellow',
+        audience: 'null'
+    }
+    
     function fillIdsDiv(players) {
         let html = '';
         players.forEach(player => {
-            console.log(id);
-            if(player.socketId === id){
-                html+=`You: <span>${player.name}</span><br>`;
+    
+            if (player.socketId === id){
+                myPlayerDetails = player;
+                html+=`<span style="background-color: ${colourMap[player.colour]}">${player.name} (You)</span><br>`;
             } else {
-                html+=`<span>${player.name}</span><br>`;
+                html+=`<span style="background-color: ${colourMap[player.colour]}">${player.name}</span><br>`;
             }
         });
         idsDiv.innerHTML = html;
     }
+
+    function displayCurrentGo(){
+        currentGoSpan.innerHTML = `It's ${colourMap[currentGo]}'s go`;
+    }
     
     socket.on('updateStore', function(STORE){
-
+        currentGo = STORE.currentGo;
+        displayCurrentGo();
         fillIdsDiv(STORE.players);
         
         if (STORE.hoverSegment) {
