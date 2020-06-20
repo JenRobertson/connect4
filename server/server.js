@@ -7,7 +7,7 @@ var port = process.env.PORT || 3000;
 const connect4 = require("./connect4");
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+  res.send('Connect 4 server')
 });
 
 http.listen(port, function(){

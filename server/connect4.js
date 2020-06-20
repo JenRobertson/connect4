@@ -1,4 +1,3 @@
-const server = require("./index");
 const circleXStart = 75;
 const circleWidth = 30;
 const circlePadding = 10;

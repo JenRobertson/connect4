@@ -1,5 +1,5 @@
 window.addEventListener('load', (event) => {
-    var socket = io();
+    var socket = io('http://localhost:3000');
     const canvas = document.querySelector('canvas');
     const winsDiv = document.querySelector('#wins-div');
     const winsSpan = document.querySelector('#wins-span');
