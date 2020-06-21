@@ -53,7 +53,7 @@ window.addEventListener('load', (event) => {
     }
     
     function addOrRemoveHoverSegment() {
-        if (localSTORE.hoverSegment === undefined || localSTORE.board[0][localSTORE.hoverSegment]) {
+        if (localSTORE.hoverSegment === undefined || localSTORE.hoverSegment === null || localSTORE.board[0][localSTORE.hoverSegment]) {
             removeHoverCircle();
             return;
         }
@@ -104,11 +104,7 @@ window.addEventListener('load', (event) => {
         currentGo = STORE.currentGo;
         displayCurrentGo();
         fillIdsDiv(STORE.players);
-        
-        if (STORE.hoverSegment !== null) {
-            addOrRemoveHoverSegment()
-        }
-        
+        addOrRemoveHoverSegment();        
         if (STORE.winScreen) {
             const colour = STORE.currentGo === 'r' ? 'Red' : 'Yellow';
             winsDiv.style.display = "block";
@@ -130,7 +126,7 @@ window.addEventListener('load', (event) => {
     
     function removeHoverCircle () {
         ctx.clearRect(0, 0, 1000, 1000);
-        drawBoard(localSTORE.board);
+        if (localSTORE) drawBoard(localSTORE.board);
         canvas.style.cursor = 'auto';
     }
     

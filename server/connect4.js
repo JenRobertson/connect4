@@ -6,7 +6,7 @@ let numberOfPlayers = 0;
 let STORE;
 const blankStore = {
     board: getBlankBoard(),
-    hoverSegment: 2,
+    hoverSegment: null,
     currentGo: 'r',
     winScreen: false,
     players: []
@@ -47,12 +47,12 @@ function getBlankBoard() {
 
 function onCanvasClick(cursorX) {
     if (STORE.winScreen) return;
+    STORE.hoverSegment = null;
     const segment = getSegement(cursorX);
     if (segment !== null) {
         dropCircle(segment)
         return STORE;
     }
-    // drawHoverCircle(segment);
 }
 
 function onHoverSegmentChange(segment) {
