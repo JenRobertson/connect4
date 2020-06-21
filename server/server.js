@@ -27,6 +27,10 @@ io.on('connection', function(socket){ // someones connected
     updateStore(connect4.onNewPlayer(socket.id, name)); // add new id to the STORE
   });
 
+  socket.on('hoverSegmentChange', function(segment){
+    updateStore(connect4.onHoverSegmentChange(segment));
+  });
+
   socket.on('canvasClick', function(cursorX){
     updateStore(connect4.onCanvasClick(cursorX));
   });

@@ -55,6 +55,11 @@ function onCanvasClick(cursorX) {
     // drawHoverCircle(segment);
 }
 
+function onHoverSegmentChange(segment) {
+    STORE.hoverSegment = segment;
+    return STORE;
+}
+
 function onRestartClick() {
     resetStore();
     return STORE;
@@ -117,4 +122,4 @@ function win() {
 function getStore() {
     return STORE;
 }
-module.exports = { onCanvasClick, onRestartClick, onResetClick, onNewPlayer, onRemovePlayer, newGame, getStore };
+module.exports = { onCanvasClick, onHoverSegmentChange, onRestartClick, onResetClick, onNewPlayer, onRemovePlayer, newGame, getStore };
