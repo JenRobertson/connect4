@@ -43,7 +43,7 @@ window.addEventListener('load', (event) => {
     
     canvas.onmousemove = (e) => {
         if (!myPlayerDetails || myPlayerDetails.colour !== currentGo || localSTORE.winScreen) { // not my go
-            removeHoverCircle();
+            // removeHoverCircle();
             return;
         };
         const segment = getSegment(e.clientX);
