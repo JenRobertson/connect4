@@ -2,7 +2,6 @@ const circleXStart = 75;
 const circleWidth = 30;
 const circlePadding = 10;
 
-let numberOfPlayers = 0;
 let STORE;
 const blankStore = {
     board: getBlankBoard(),
@@ -41,8 +40,9 @@ function onRemovePlayer(socketId){
 }
 
 function getBlankBoard() {
-    const numOfCirclesX = 6;
-    return [new Array(numOfCirclesX), new Array(numOfCirclesX), new Array(numOfCirclesX), new Array(numOfCirclesX), new    Array(numOfCirclesX), new Array(numOfCirclesX)];
+    const numOfCirclesY = 7;
+    //const numOfCirclesX = 6;
+    return [new Array(numOfCirclesY),new Array(numOfCirclesY),new Array(numOfCirclesY),new Array(numOfCirclesY), new Array(numOfCirclesY),new Array(numOfCirclesY)];
 }
 
 function onCanvasClick(cursorX) {
@@ -90,7 +90,7 @@ function dropCircle(x) {
 function getSegement(clientX) {
     const startX = circleXStart - circleWidth;
     const widthOfSegment = circleWidth * 2 + (circlePadding);
-    for (var x = 0; x < STORE.board.length; x++) {
+    for (var x = 0; x < STORE.board[0].length; x++) {
         const withinSegment = clientX > startX + (widthOfSegment * x) && clientX < startX + (widthOfSegment * (x + 1) );
         if (withinSegment) {
             return x; 

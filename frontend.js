@@ -63,7 +63,7 @@ window.addEventListener('load', (event) => {
     function getSegment(clientX) {
         const startX = circleXStart - circleWidth;
         const widthOfSegment = circleWidth * 2 + (circlePadding);
-        for (var x = 0; x < localSTORE.board.length; x++) {
+        for (var x = 0; x < localSTORE.board[0].length; x++) {
             const withinSegment = clientX > startX + (widthOfSegment * x) && clientX < startX + (widthOfSegment * (x + 1) );
             if (withinSegment) {
                 return x; 
@@ -131,17 +131,17 @@ window.addEventListener('load', (event) => {
     }
     
     function drawBoard(board) {
+        const numOfCirclesX = 6;
         ctx.fillStyle = 'black';
-        ctx.fillRect(20, 20, 450, 450);
+        ctx.fillRect(20, 20, 550, 450);
         let circleX = 75;
         let circleY = 75
-        for (var y = 0; y < board.length; y++) {
-            for (var x = 0; x < board[0].length; x++) {
+        for (var y = 0; y < board[0].length; y++) {
+            for (var x = 0; x < board.length; x++) {
                 
                 drawCircle(circleX, circleY, board[x][y]);
                 circleX += circlePadding + (circleWidth * 2);
-                
-                if(x === 5) {
+                if(x === numOfCirclesX - 1) {
                     circleY += circlePadding + (circleWidth * 2);
                     circleX = circleXStart;
                 }
