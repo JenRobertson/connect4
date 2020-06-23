@@ -1,7 +1,3 @@
-const circleXStart = 75;
-const circleWidth = 30;
-const circlePadding = 10;
-
 let STORE;
 const blankStore = {
     board: getBlankBoard(),
@@ -45,10 +41,9 @@ function getBlankBoard() {
     return [new Array(numOfCirclesY),new Array(numOfCirclesY),new Array(numOfCirclesY),new Array(numOfCirclesY), new Array(numOfCirclesY),new Array(numOfCirclesY)];
 }
 
-function onCanvasClick(cursorX) {
+function onCanvasClick(segment) {
     if (STORE.winScreen) return;
     STORE.hoverSegment = null;
-    const segment = getSegement(cursorX);
     if (segment !== null) {
         dropCircle(segment)
         return STORE;
@@ -84,17 +79,6 @@ function dropCircle(x) {
         win()
     } else {
         STORE.currentGo === 'y' ? STORE.currentGo = 'r' :  STORE.currentGo = 'y';
-    }
-}
-
-function getSegement(clientX) {
-    const startX = circleXStart - circleWidth;
-    const widthOfSegment = circleWidth * 2 + (circlePadding);
-    for (var x = 0; x < STORE.board[0].length; x++) {
-        const withinSegment = clientX > startX + (widthOfSegment * x) && clientX < startX + (widthOfSegment * (x + 1) );
-        if (withinSegment) {
-            return x; 
-        }
     }
 }
 

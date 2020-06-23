@@ -31,8 +31,8 @@ io.on('connection', function(socket){ // someones connected
     updateStore(connect4.onHoverSegmentChange(segment));
   });
 
-  socket.on('canvasClick', function(cursorX){
-    updateStore(connect4.onCanvasClick(cursorX));
+  socket.on('canvasClick', function(segment){
+    updateStore(connect4.onCanvasClick(segment));
   });
 
   socket.on('restartClick', function(){

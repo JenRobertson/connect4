@@ -1,6 +1,6 @@
 window.addEventListener('load', (event) => {
-    // const socket = io('http://localhost:3000');
-    const socket = io('https://waving-walrus-connect4.herokuapp.com');
+    const socket = io('http://localhost:3000');
+    // const socket = io('https://waving-walrus-connect4.herokuapp.com');
     const canvas = document.querySelector('canvas');
     const winsDiv = document.querySelector('#wins-div');
     const winsSpan = document.querySelector('#wins-span');
@@ -12,19 +12,30 @@ window.addEventListener('load', (event) => {
     const onboardingDiv = document.querySelector('#onboarding-div');
     const onboardingInput = document.querySelector('#onboarding-div__input');
     const onboardingButton = document.querySelector('#onboarding-div__button');
+
+    const images = {
+        nest_bottom: document.getElementById('nest_bottom'),
+        nest_front: document.getElementById('nest_front'),
+        grass: document.getElementById('grass'),
+        chicken_orange: document.getElementById('chicken_orange'),
+        chicken_black: document.getElementById('chicken_black')
+    }
     
     const ctx = canvas.getContext('2d');
     
-    const circleWidth = 30;
-    const circlePadding = 10;
-    const circleXStart = 75;
+    const circleWidth = 136;
+    const circlePadding = 0;
+    const circleXStart = 10;
     
     let id, myPlayerDetails, currentGo, localSTORE;
     
     canvas.onclick = (e) => {
         if (localSTORE.winScreen) return;
         if (myPlayerDetails && myPlayerDetails.colour === currentGo) {
-            socket.emit('canvasClick', e.clientX);
+            const segment = getSegment(e.clientX);
+            if (segment !== undefined) {
+                socket.emit('canvasClick', segment);
+            }
         }
     }
     
@@ -43,7 +54,7 @@ window.addEventListener('load', (event) => {
     
     canvas.onmousemove = (e) => {
         if (!myPlayerDetails || myPlayerDetails.colour !== currentGo || localSTORE.winScreen) { // not my go
-            // removeHoverCircle();
+            removeHoverCircle();
             return;
         };
         const segment = getSegment(e.clientX);
@@ -61,8 +72,8 @@ window.addEventListener('load', (event) => {
     }
     
     function getSegment(clientX) {
-        const startX = circleXStart - circleWidth;
-        const widthOfSegment = circleWidth * 2 + (circlePadding);
+        const startX = circleXStart;
+        const widthOfSegment = circleWidth + circlePadding;
         for (var x = 0; x < localSTORE.board[0].length; x++) {
             const withinSegment = clientX > startX + (widthOfSegment * x) && clientX < startX + (widthOfSegment * (x + 1) );
             if (withinSegment) {
@@ -104,7 +115,6 @@ window.addEventListener('load', (event) => {
         currentGo = STORE.currentGo;
         displayCurrentGo();
         fillIdsDiv(STORE.players);
-        addOrRemoveHoverSegment();        
         if (STORE.winScreen) {
             const colour = STORE.currentGo === 'r' ? 'Red' : 'Yellow';
             winsDiv.style.display = "block";
@@ -114,13 +124,14 @@ window.addEventListener('load', (event) => {
             winsDiv.style.display = "none";
         }
         drawBoard(STORE.board);
+        addOrRemoveHoverSegment();        
     });
     
     function drawHoverCircle (segment, currentGo) {
-        const widthOfSegment = circleWidth * 2 + (circlePadding);
+        const widthOfSegment = circleWidth + circlePadding;
         ctx.clearRect(0, 0, 1000, 1000);
         drawBoard(localSTORE.board);
-        drawCircle(30, (segment * widthOfSegment) + circleXStart, currentGo);
+        drawCircle(30, (segment * widthOfSegment) + circleXStart, currentGo, false);
         canvas.style.cursor = 'pointer';
     }
     
@@ -132,31 +143,34 @@ window.addEventListener('load', (event) => {
     
     function drawBoard(board) {
         const numOfCirclesX = 6;
-        ctx.fillStyle = 'black';
-        ctx.fillRect(20, 20, 550, 450);
-        let circleX = 75;
-        let circleY = 75
+        ctx.drawImage(images.grass, 0, 0);
+        const circleHeight = 112;
+        let circleX = circleXStart;
+        let circleY = circleXStart;
         for (var y = 0; y < board[0].length; y++) {
             for (var x = 0; x < board.length; x++) {
                 
                 drawCircle(circleX, circleY, board[x][y]);
-                circleX += circlePadding + (circleWidth * 2);
+                circleX += circlePadding + circleHeight;
                 if(x === numOfCirclesX - 1) {
-                    circleY += circlePadding + (circleWidth * 2);
+                    circleY += circlePadding + (circleWidth);
                     circleX = circleXStart;
                 }
                 
             }
         }
     }
-    
-    function drawCircle(circleX, circleY, colour) {
-        if(!colour) ctx.fillStyle = "#FFFFFF";
-        if(colour === 'y') ctx.fillStyle = "#fcba03";
-        if(colour === 'r') ctx.fillStyle = "#fc3503";
+
+    function drawCircle(circleX, circleY, colour, withNest = true) {
+        withNest ? ctx.drawImage(images.nest_bottom, circleY, circleX) : '';
+        if (colour === 'y'){
+            ctx.drawImage(images.chicken_orange, circleY + 8, circleX);
+        } 
         
-        ctx.beginPath();
-        ctx.arc(circleY, circleX, circleWidth, 0, 2 * Math.PI);
-        ctx.fill();
+        if (colour === 'r'){
+            ctx.drawImage(images.chicken_black, circleY + 8, circleX);
+        } 
+        withNest ? ctx.drawImage(images.nest_front, circleY, circleX + 50) : '';
+        
     }
 });
