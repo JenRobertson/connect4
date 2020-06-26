@@ -1,6 +1,6 @@
 window.addEventListener('load', (event) => {
-    const socket = io('http://localhost:3000');
-    // const socket = io('https://waving-walrus-connect4.herokuapp.com');
+    // const socket = io('http://localhost:3000');
+    const socket = io('https://waving-walrus-connect4.herokuapp.com');
     const canvas = document.querySelector('canvas');
     const winsDiv = document.querySelector('#wins-div');
     const winsSpan = document.querySelector('#wins-span');
