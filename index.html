@@ -11,8 +11,8 @@
         padding: 20px;
         box-sizing: border-box;
         background-color: #b2944b;
-        width: 500px;
-        height: 300px;
+        width: 700px;
+        height: 450px;
         text-align: center;
         position: absolute;
         left: 0;
@@ -61,6 +61,19 @@
         height: 700px;
         position: relative;
       }
+
+      .chicken-button {
+        width: 120px;
+        height: 120px;
+      }
+
+      #current-go {
+        font-size: 77px;
+        vertical-align: top;
+        padding-top: 42px;
+        margin-left: 25px;
+        margin-right: 25px;   
+      }
     </style>
 
   </head>
@@ -69,8 +82,16 @@
       <img src="img/nest_front.png" id="nest_front">
       <img src="img/nest_bottom.png" id="nest_bottom">
       <img src="img/grass.png" id="grass">
-      <img src="img/chicken_orange.png" id="chicken_orange">
-      <img src="img/chicken_black.png" id="chicken_black">
+      <img src="img/chicken_1.png" id="chicken_1">
+      <img src="img/chicken_2.png" id="chicken_2">
+      <img src="img/chicken_3.png" id="chicken_3">
+      <img src="img/chicken_4.png" id="chicken_4">
+      <img src="img/chicken_5.png" id="chicken_5">
+      <img src="img/chicken_6.png" id="chicken_6">
+      <img src="img/chicken_7.png" id="chicken_7">
+      <img src="img/chicken_8.png" id="chicken_8">
+      <img src="img/chicken_9.png" id="chicken_9">
+      <img src="img/chicken_10.png" id="chicken_10">
     </div>
     <div id="container">
     <canvas width="1000" height="700"></canvas>
@@ -82,11 +103,20 @@
     <button id="reset-button">Reset</button>
     <div id="ids-div"></div>
     <div id="onboarding-div" class="floating-box">
-      <h2>Welcome to connect 4, please enter a username</h2>
-      <input id="onboarding-div__input"><br><br>
-      <button id="onboarding-div__button">Go!</button>
+      <h2>Welcome to connect 4, please choose a chicken</h2>
+      <button class="chicken-button"><img src="img/chicken_1.png"></button>
+      <button class="chicken-button"><img src="img/chicken_2.png"></button>
+      <button class="chicken-button"><img src="img/chicken_3.png"></button>
+      <button class="chicken-button"><img src="img/chicken_4.png"></button>
+      <button class="chicken-button"><img src="img/chicken_5.png"></button>
+      <button class="chicken-button"><img src="img/chicken_6.png"></button>
+      <button class="chicken-button"><img src="img/chicken_7.png"></button>
+      <button class="chicken-button"><img src="img/chicken_8.png"></button>
+      <button class="chicken-button"><img src="img/chicken_9.png"></button>
+      <button class="chicken-button"><img src="img/chicken_10.png"></button>
+      <!-- <input id="onboarding-div__input"><br><br> -->
+      <!-- <button id="onboarding-div__button">Go!</button> -->
     </div>
-    <span id="currentgo-span"></span>
       
   </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>

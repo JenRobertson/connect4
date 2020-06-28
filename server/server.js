@@ -23,8 +23,8 @@ io.on('connection', function(socket){ // someones connected
 
   updateStore(connect4.getStore());
 
-  socket.on('newPlayer', function(name){
-    updateStore(connect4.onNewPlayer(socket.id, name)); // add new id to the STORE
+  socket.on('newPlayer', function(chickenId){
+    updateStore(connect4.onNewPlayer(socket.id, chickenId)); // add new id to the STORE
   });
 
   socket.on('hoverSegmentChange', function(segment){

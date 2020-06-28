@@ -2,7 +2,7 @@ let STORE;
 const blankStore = {
     board: getBlankBoard(),
     hoverSegment: null,
-    currentGo: 'r',
+    currentGo: null,
     winScreen: false,
     players: []
 }
@@ -13,16 +13,9 @@ function newGame() {
     return STORE;
 }
 
-function onNewPlayer(socketId, name){
-    let colour;
-    if (STORE.players.length === 0){
-        colour = 'r';
-    } else if (STORE.players.length === 1){
-        colour = 'y';
-    } else {
-        colour = 'audience';
-    }
-    STORE.players.push({name, socketId, colour});
+function onNewPlayer (socketId, chickenId) {
+    STORE.players.push({chickenId, socketId});
+    if (STORE.players.length === 1) STORE.currentGo = STORE.players[0];
     return STORE;
 }
 
@@ -78,7 +71,7 @@ function dropCircle(x) {
     if(detect4()) {
         win()
     } else {
-        STORE.currentGo === 'y' ? STORE.currentGo = 'r' :  STORE.currentGo = 'y';
+        STORE.currentGo === STORE.players[0] ? STORE.currentGo = STORE.players[1] : STORE.currentGo = STORE.players[0];
     }
 }
 

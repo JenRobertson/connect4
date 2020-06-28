@@ -1,6 +1,8 @@
+let id, currentGo, localSTORE;
+let myPlayerDetails = {};
 window.addEventListener('load', (event) => {
-    // const socket = io('http://localhost:3000');
-    const socket = io('https://waving-walrus-connect4.herokuapp.com');
+    const socket = io('http://localhost:3000');
+    // const socket = io('https://waving-walrus-connect4.herokuapp.com');
     const canvas = document.querySelector('canvas');
     const winsDiv = document.querySelector('#wins-div');
     const winsSpan = document.querySelector('#wins-span');
@@ -13,25 +15,37 @@ window.addEventListener('load', (event) => {
     const onboardingInput = document.querySelector('#onboarding-div__input');
     const onboardingButton = document.querySelector('#onboarding-div__button');
 
+    const chickenButtons = document.querySelectorAll('.chicken-button');
+    chickenButtons.forEach((chickenButton, index) => {
+        chickenButton.onclick = () => {
+            myPlayerDetails.chickenId = index + 1;
+            socket.emit('newPlayer', myPlayerDetails.chickenId);
+            onboardingDiv.style.display = 'none';
+        };
+    });
+
     const images = {
         nest_bottom: document.getElementById('nest_bottom'),
         nest_front: document.getElementById('nest_front'),
         grass: document.getElementById('grass'),
-        chicken_orange: document.getElementById('chicken_orange'),
-        chicken_black: document.getElementById('chicken_black')
+        chickens: []
     }
     
+    for (let i = 1; i < 11; i++) {
+        images.chickens.push(document.getElementById(`chicken_${i}`));
+    }
+
     const ctx = canvas.getContext('2d');
     
     const circleWidth = 136;
     const circlePadding = 0;
     const circleXStart = 10;
     
-    let id, myPlayerDetails, currentGo, localSTORE;
     
     canvas.onclick = (e) => {
         if (localSTORE.winScreen) return;
-        if (myPlayerDetails && myPlayerDetails.colour === currentGo) {
+        console.log(localSTORE)
+        if (myPlayerDetails && myPlayerDetails.chickenId === localSTORE.currentGo.chickenId) {
             const segment = getSegment(e.clientX);
             if (segment !== undefined) {
                 socket.emit('canvasClick', segment);
@@ -45,11 +59,6 @@ window.addEventListener('load', (event) => {
     
     resetButton.onclick = (e) => {
         socket.emit('resetClick');
-    }
-    
-    onboardingButton.onclick = () => {
-        socket.emit('newPlayer', onboardingInput.value);
-        onboardingDiv.style.display = 'none';
     }
     
     canvas.onmousemove = (e) => {
@@ -94,26 +103,24 @@ window.addEventListener('load', (event) => {
     
     function fillIdsDiv(players) {
         let html = '';
-        players.forEach(player => {
+        players.forEach((player, index) => {
             
             if (player.socketId === id){
                 myPlayerDetails = player;
-                html+=`<span style="background-color: ${colourMap[player.colour]}">${player.name} (You)</span><br>`;
+                html+=`<span><img src="img/chicken_${player.chickenId}.png"> (You)</span>`;
             } else {
-                html+=`<span style="background-color: ${colourMap[player.colour]}">${player.name}</span><br>`;
+                html+=`<span><img src="img/chicken_${player.chickenId}.png"></span>`;
             }
+            if (index === 0){
+                html += `<span id="current-go">${currentGo.chickenId === player.chickenId ? '<' : '>'}</span>`;
+            } 
         });
         idsDiv.innerHTML = html;
-    }
-    
-    function displayCurrentGo(){
-        currentGoSpan.innerHTML = `It's ${colourMap[currentGo]}'s go`;
     }
     
     socket.on('updateStore', function(STORE){
         localSTORE = STORE;
         currentGo = STORE.currentGo;
-        displayCurrentGo();
         fillIdsDiv(STORE.players);
         if (STORE.winScreen) {
             const colour = STORE.currentGo === 'r' ? 'Red' : 'Yellow';
@@ -161,15 +168,9 @@ window.addEventListener('load', (event) => {
         }
     }
 
-    function drawCircle(circleX, circleY, colour, withNest = true) {
+    function drawCircle(circleX, circleY, player, withNest = true) {
         withNest ? ctx.drawImage(images.nest_bottom, circleY, circleX) : '';
-        if (colour === 'y'){
-            ctx.drawImage(images.chicken_orange, circleY + 8, circleX);
-        } 
-        
-        if (colour === 'r'){
-            ctx.drawImage(images.chicken_black, circleY + 8, circleX);
-        } 
+        if (player) ctx.drawImage(images.chickens[player.chickenId - 1], circleY + 8, circleX);
         withNest ? ctx.drawImage(images.nest_front, circleY, circleX + 50) : '';
         
     }
