@@ -123,10 +123,11 @@ window.addEventListener('load', (event) => {
         currentGo = STORE.currentGo;
         fillIdsDiv(STORE.players);
         if (STORE.winScreen) {
-            const colour = STORE.currentGo === 'r' ? 'Red' : 'Yellow';
             winsDiv.style.display = "block";
-            winsDiv.style.backgroundColor = colour;
-            winsSpan.innerHTML = `${colour} is the winner!!`;
+            winsSpan.innerHTML = `
+            <img style="width: 225px" src="img/chicken_${currentGo.chickenId}.png">
+            <br>
+             is the winner!`;
         } else {
             winsDiv.style.display = "none";
         }
