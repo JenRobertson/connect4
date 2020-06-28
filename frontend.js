@@ -62,7 +62,7 @@ window.addEventListener('load', (event) => {
     }
     
     canvas.onmousemove = (e) => {
-        if (!myPlayerDetails || myPlayerDetails.colour !== currentGo || localSTORE.winScreen) { // not my go
+        if (!myPlayerDetails || myPlayerDetails.chickenId !== localSTORE.currentGo.chickenId || localSTORE.winScreen) { // not my go
             removeHoverCircle();
             return;
         };
